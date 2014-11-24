@@ -73,6 +73,16 @@ class Notification:
                 # break to prevent assigning service to multiple groups
                 break
 
+    def removeServer(self, name)
+        """ Removes the service and replaces it with an unused token
+        """
+
+        # locate the service in the tuple
+        for groups in self.pinGroups:
+            if group[0] == str(name):
+                # replace the service name with unused
+                group[0] = "unused"
+                break
 
 
     def blink(self, name, priority ):
