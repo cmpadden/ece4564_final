@@ -21,5 +21,7 @@ Dependencies
 Name | location
 --- | ---
 google-api-python-client | https://pypi.python.org/pypi/google-api-python-client/
+gflags | apt-get python-gflags
+oauth2client | pip install oauth2client
 
 

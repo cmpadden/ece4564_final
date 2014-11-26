@@ -1,8 +1,13 @@
-#!/usr/bin/env pytho
+#!/usr/bin/env python
 """
 Gmail Service client
+
+Parts of the gmail service class created based on the example in the Gmail API sample code located
+at https://developers.google.com/gmail/api/quickstart/quickstart-python
+
 """
 import httplib2
+import time
 
 from googleapiclient.discovery import build
 from oauth2client.client import flow_from_clientsecrets
@@ -19,8 +24,14 @@ class GmailService:
 
         # The actual location of the file.  Removed for commits
         self.CLIENT_SECRET_FILE = 'CLENT_SECRET_FILE.json'
+
+        # Allows readonly access
         self.OAUTH_SCOPE = 'https://www.googleapis.com/auth/gmail.readonly'
+
+        # Location of Credentials storage
         self.STORAGE = Storage('gmail.storage')
+
+        #OAuth flow to retrieve credentials
         self.flow = flow_from_clientsecrets(self.CLIENT_SECRET_FILE, scope=self.OAUTH_SCOPE)
 
     def __str__(self):
@@ -51,8 +62,8 @@ class GmailService:
         Updates and gets the current priority
         :return: The services priority
         """
-        messages = self.getMessageCount()
-        self.updatePriority(messages)
+        # Get new message count and update priority
+        self.getMessageCount()
         print(str(self))
         return self.priority
 
@@ -60,7 +71,8 @@ class GmailService:
         """
         Makes the request to the Gmail API for the number of unread messages within the past day
         Initial usage requires the user to go to a website and authorize the application
-        :return: Number of unread messages in the past day
+        Calls updatePriority with the new message count
+        :return: None
         """
         messageCount = 0
 
@@ -70,32 +82,24 @@ class GmailService:
         if credentials is None or credentials.invalid:
             credentials = run(self.flow, self.STORAGE, http=http)
 
+        # Authorize httplib2.Http object with credentials
         http = credentials.authorize(http)
 
+        # Build the gmail service from discovery
         gmail_service = build('gmail', 'v1', http=http)
 
+        # Retrieve all new unread messages within the past day
         messages = gmail_service.users().messages().list(userId='me',
-                                                         q='is:unread AND newer:1d').execute()
+                                                         q='is:unread AND newer_than:7d').execute()
 
-        more = True
-        while more:
-            try:
-                if messages['message']:
-                    messageCount += len(messages['message'])
-            except KeyError:
-                pass
-            try:
-                if messages['nextPageToken']:
-                    messages = gmail_service.users().messages().list(
-                        userId='me',
-                        q='is:unread AND newer_than:1d',
-                        pageToken=messages[
-                            'nextPageToken']).execute()
-                else:
-                    more = False
-            except KeyError:
-                more = False
-        return messageCount
+        try:
+            if messages['messages']:
+                messageCount = len(messages['messages'])
+        # if messages['message'] doesn't exist, then there are no new unread messages
+        except KeyError:
+            messageCount = 0
+
+        self.updatePriority(messageCount)
 
     def updatePriority(self, count):
         """
@@ -106,16 +110,16 @@ class GmailService:
             1 - 1-5 messages
             2 - 6-20 messages
             3 - 21-50 messages
-            4 - 51-99 messages
-            5 - 100+ messages
+            4 - 51-75 messages
+            5 - 76+ messages
 
         :arg count:  the number of unread messages
         :return: None
         :updates:  self.priority
         """
-        if count >= 100:
+        if count > 75:
             self.priority = 5
-        elif 50 < count < 100:
+        elif 50 < count <= 75:
             self.priority = 4
         elif 20 < count <= 50:
             self.priority = 3
@@ -130,7 +134,19 @@ class GmailService:
 def main():
     """
     Main method for testing
+    Polls gmail class every 60 seconds.  With current settings, every 5 minutes the class
+    will update and print out the new value
     """
+    gmail = GmailService()
+    try:
+        while True:
+            if gmail.doUpdate():
+                gmail.getPriority()
+            else:
+                time.sleep(60)
+    except KeyboardInterrupt:
+        pass
+
     return 0
 
 
