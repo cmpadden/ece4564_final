@@ -16,6 +16,10 @@ Andrew Gardner | Implement module to get weather data and update LED system appr
 Cole Padden | Implement a module to control LEDs based on input parameters of GPIO pin, blink duration, blink frequency, and LED color; and main module which calls the individual service functions.
 
 
-
+Dependencies
+============
+Name | location
+--- | ---
+google-api-python-client | https://pypi.python.org/pypi/google-api-python-client/
 
 
