@@ -13,14 +13,6 @@ from oauth2client.tools import run
 class GmailService:
     def __init__(self):
         self.name = 'Gmail Service'
-
-        # Priority Levels:
-        #   0 - No Messages
-        #   1 - 1-5 messages
-        #   2 - 6-20 messages
-        #   3 - 21-50 messages
-        #   4 - 51-99 messages
-        #   5 - 100+ messages
         self.priority = 0
         self.updatePeriod = 5
         self.updateCount = 0
@@ -49,8 +41,6 @@ class GmailService:
         """
         if self.updateCount == self.updatePeriod:
             self.updateCount = 0
-            messages = self.getMessageCount()
-            self.updatePriority(messages)
             return True
         else:
             self.updateCount += 1
@@ -58,9 +48,11 @@ class GmailService:
 
     def getPriority(self):
         """
-        Gets the current priority
+        Updates and gets the current priority
         :return: The services priority
         """
+        messages = self.getMessageCount()
+        self.updatePriority(messages)
         print(str(self))
         return self.priority
 
@@ -108,6 +100,15 @@ class GmailService:
     def updatePriority(self, count):
         """
         Updates the priority based on the number of messages
+
+        Priority Levels:
+            0 - No Messages
+            1 - 1-5 messages
+            2 - 6-20 messages
+            3 - 21-50 messages
+            4 - 51-99 messages
+            5 - 100+ messages
+
         :arg count:  the number of unread messages
         :return: None
         :updates:  self.priority
