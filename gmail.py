@@ -13,6 +13,14 @@ from oauth2client.tools import run
 class GmailService:
     def __init__(self):
         self.name = 'Gmail Service'
+
+        # Priority Levels:
+        #   0 - No Messages
+        #   1 - 1-5 messages
+        #   2 - 6-20 messages
+        #   3 - 21-50 messages
+        #   4 - 51-99 messages
+        #   5 - 100+ messages
         self.priority = 0
         self.updatePeriod = 5
         self.updateCount = 0
@@ -27,21 +35,41 @@ class GmailService:
         return "{0}: {1}".format(self.name, str(self.priority))
 
     def getName(self):
+        """
+        Returns the service name
+        :return: Service name
+        """
         return self.name
 
     def doUpdate(self):
+        """
+        If the number of times this is called is the update period, updates the message count
+        otherwise, updates counter
+        :return:  True if update executed, otherwise false
+        """
         if self.updateCount == self.updatePeriod:
             self.updateCount = 0
+            messages = self.getMessageCount()
+            self.updatePriority(messages)
             return True
         else:
             self.updateCount += 1
             return False
 
     def getPriority(self):
+        """
+        Gets the current priority
+        :return: The services priority
+        """
         print(str(self))
         return self.priority
 
     def getMessageCount(self):
+        """
+        Makes the request to the Gmail API for the number of unread messages within the past day
+        Initial usage requires the user to go to a website and authorize the application
+        :return: Number of unread messages in the past day
+        """
         messageCount = 0
 
         http = httplib2.Http()
@@ -76,6 +104,26 @@ class GmailService:
             except KeyError:
                 more = False
         return messageCount
+
+    def updatePriority(self, count):
+        """
+        Updates the priority based on the number of messages
+        :arg count:  the number of unread messages
+        :return: None
+        :updates:  self.priority
+        """
+        if count >= 100:
+            self.priority = 5
+        elif 50 < count < 100:
+            self.priority = 4
+        elif 20 < count <= 50:
+            self.priority = 3
+        elif 5 < count <= 20:
+            self.priority = 2
+        elif 1 < count <= 5:
+            self.priority = 1
+        else:
+            self.priority = 0
 
 
 def main():
