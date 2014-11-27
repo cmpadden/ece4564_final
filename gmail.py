@@ -30,7 +30,7 @@ class GmailService:
         elif os.path.isfile('../client_secret.json'):
             self.CLIENT_SECRET_FILE = '../client_secret.json'
         else:
-            print "Error Gmail Client Secret Not found.  Service will not work"
+            raise GmailException('Error Gmail Client Secret Not found.  Service will not work')
 
         # Allows readonly access
         self.OAUTH_SCOPE = 'https://www.googleapis.com/auth/gmail.readonly'
@@ -85,9 +85,12 @@ class GmailService:
 
         http = httplib2.Http()
 
-        credentials = self.STORAGE.get()
-        if credentials is None or credentials.invalid:
-            credentials = run(self.flow, self.STORAGE, http=http)
+        try:
+            credentials = self.STORAGE.get()
+            if credentials is None or credentials.invalid:
+                credentials = run(self.flow, self.STORAGE, http=http)
+        except:
+            raise GmailException('Error:  Authentication request was rejected')
 
         # Authorize httplib2.Http object with credentials
         http = credentials.authorize(http)
@@ -136,6 +139,10 @@ class GmailService:
             self.priority = 1
         else:
             self.priority = 0
+
+
+class GmailException(Exception):
+    pass
 
 
 def main():
