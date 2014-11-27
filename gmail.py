@@ -7,6 +7,7 @@ at https://developers.google.com/gmail/api/quickstart/quickstart-python
 
 """
 import httplib2
+import os
 import time
 
 from googleapiclient.discovery import build
@@ -20,10 +21,16 @@ class GmailService:
         self.name = 'Gmail Service'
         self.priority = 0
         self.updatePeriod = 5
-        self.updateCount = 0
+        # Asks for Authorization immediately
+        self.updateCount = 5
 
-        # The actual location of the file.  Removed for commits
-        self.CLIENT_SECRET_FILE = 'CLENT_SECRET_FILE.json'
+        # The file exists, but not pushed to git.
+        if os.path.isfile('client_secret.json'):
+            self.CLIENT_SECRET_FILE = 'client_secret.json'
+        elif os.path.isfile('../client_secret.json'):
+            self.CLIENT_SECRET_FILE = '../client_secret.json'
+        else:
+            print "Error Gmail Client Secret Not found.  Service will not work"
 
         # Allows readonly access
         self.OAUTH_SCOPE = 'https://www.googleapis.com/auth/gmail.readonly'
