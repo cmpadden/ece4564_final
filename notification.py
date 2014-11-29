@@ -58,6 +58,26 @@ class Notification:
                          ["unused", 15, 16, 1],\
                          ["unused", 6, 10, 11]
 
+        # initialize all pins to 0V
+        '''
+        wiringpi.wiringPiSetup()
+        wiringpi.digitalWrite(8, 0)
+        wiringpi.digitalWrite(9, 0)
+        wiringpi.digitalWrite(7, 0)
+        wiringpi.digitalWrite(0, 0)
+        wiringpi.digitalWrite(2, 0)
+        wiringpi.digitalWrite(3, 0)
+        wiringpi.digitalWrite(12, 0)
+        wiringpi.digitalWrite(13, 0)
+        wiringpi.digitalWrite(14, 0)
+        wiringpi.digitalWrite(15, 0)
+        wiringpi.digitalWrite(16, 0)
+        wiringpi.digitalWrite(1, 0)
+        wiringpi.digitalWrite(6, 0)
+        wiringpi.digitalWrite(10, 0)
+        wiringpi.digitalWrite(11, 0)
+        ''' 
+
 
     def addService(self, name):
         """ Maps the service to a group of pins if it is not yet taken
@@ -93,7 +113,7 @@ class Notification:
         """
 
         # set wiring pi to use pins
-        # wiringpi.wiringPiSetup()
+        wiringpi.wiringPiSetup()
 
         # temporary list of pins from service
         servicePins = []
@@ -104,14 +124,14 @@ class Notification:
         # index 0 will be GREEN, 1 will be YELLOW, 2 will be RED
         # enable the three pins for output for that service and set to off 0V
         print "Enabling pin: " + str(servicePins[0])
-        # wiringpi.pinMode(servicePins[0], 1)
-        # wiringpi.digitalWrite(servicePins[0], 0)
+        wiringpi.pinMode(servicePins[0], 1)
+        wiringpi.digitalWrite(servicePins[0], 0)
         print "Enabling pin: " + str(servicePins[1])
-        # wiringpi.pinMode(servicePins[1], 1)
-        # wiringpi.digitalWrite(servicePins[1], 0)
+        wiringpi.pinMode(servicePins[1], 1)
+        wiringpi.digitalWrite(servicePins[1], 0)
         print "Enabling pin: " + str(servicePins[2])
-        # wiringpi.pinMode(servicePins[2], 1)
-        # wiringpi.digitalWrite(servicePins[2], 0)
+        wiringpi.pinMode(servicePins[2], 1)
+        wiringpi.digitalWrite(servicePins[2], 0)
 
 
         # loops 20 times, so that will be 1 minute of blinking with 1s on, 2s off
@@ -120,17 +140,17 @@ class Notification:
             # turn on LEDs 3.3V
             # index 0, green is enabled for priority levels 1 and 2
             if (int(priority) == 1) or (int(priority) == 2):
-                # wiringpi.digitalWrite(servicePins[0], 1)
+                wiringpi.digitalWrite(servicePins[0], 1)
                 print "on green at " + str(servicePins[0])
 
             # index 1, yellow is enabled for priority levels 2, 3, and 4
             if (int(priority) == 2) or (int(priority) == 3) or (int(priority) == 4):
-                # wiringpi.digitalWrite(servicePins[1], 1)
+                wiringpi.digitalWrite(servicePins[1], 1)
                 print "on yellow at " + str(servicePins[1])
 
             # index 2, red is enabled for priority levels 4 and 5
             if (int(priority) == 4) or (int(priority) == 5):
-                # wiringpi.digitalWrite(servicePins[2], 1)
+                wiringpi.digitalWrite(servicePins[2], 1)
                 print "on red at " + str(servicePins[2])
 
             # wait a second before disabling LEDs before next blink
@@ -138,24 +158,24 @@ class Notification:
 
             # turn off lEDs and wait another second
             print "off"
-            # wiringpi.digitalWrite(servicePins[0], 0)
-            # wiringpi.digitalWrite(servicePins[1], 0)
-            # wiringpi.digitalWrite(servicePins[2], 0)
+            wiringpi.digitalWrite(servicePins[0], 0)
+            wiringpi.digitalWrite(servicePins[1], 0)
+            wiringpi.digitalWrite(servicePins[2], 0)
 
             #  wait one more second of being off
             sleep(2)
 
         # clean up the pins by making sure they are off and setting them back to inputs
-        # wiringpi.digitalWrite(servicePins[0], 0)
-        # wiringpi.digitalWrite(servicePins[1], 0)
-        # wiringpi.digitalWrite(servicePins[2], 0)
-        # wiringpi.pinMode(servicePins[0], 1)
-        # wiringpi.pinMode(servicePins[1], 1)
-        # wiringpi.pinMode(servicePins[2], 1)
+        wiringpi.digitalWrite(servicePins[0], 0)
+        wiringpi.digitalWrite(servicePins[1], 0)
+        wiringpi.digitalWrite(servicePins[2], 0)
+        wiringpi.pinMode(servicePins[0], 1)
+        wiringpi.pinMode(servicePins[1], 1)
+        wiringpi.pinMode(servicePins[2], 1)
 
 
 
-
+'''
 # TESTING THE CLASS
 
 myNotification = Notification()
@@ -172,4 +192,4 @@ print myNotification.pinGroups
 # attempt to blink LEDs
 print "\n attempting to blink leds \n "
 myNotification.blink("secondService", 4)
-
+'''
