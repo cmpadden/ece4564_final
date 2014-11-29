@@ -73,7 +73,7 @@ class Notification:
                 # break to prevent assigning service to multiple groups
                 break
 
-    def removeServer(self, name)
+    def removeServer(self, name):
         """ Removes the service and replaces it with an unused token
         """
 
