@@ -41,7 +41,7 @@ http://raspi.tv/2013/how-to-use-wiringpi2-for-python-on-the-raspberry-pi-in-rasp
 |-------------|---------|------------|-----------|
 """
 
-#import wiringpi2 as wiringpi
+import wiringpi2 as wiringpi
 from time import sleep
 
 class Notification:
@@ -101,6 +101,7 @@ class Notification:
                 # replace the service name with unused
                 group[0] = "unused"
                 break
+
     def leds_on(self, name, priority):
         """ turns on the LEDs for a service based on priority"""
 
@@ -133,7 +134,7 @@ class Notification:
         if (int(priority) == 4) or (int(priority) == 5):
             wiringpi.digitalWrite(servicePins[2], 1)
 
-    def leds_off(self, name, priority)
+    def leds_off(self, name, priority):
         """ turns off LEDs for a service based on a priority """
 
         # set wiring pi to use pins
