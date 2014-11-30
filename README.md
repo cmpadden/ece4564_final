@@ -11,9 +11,9 @@ collaborators
 Name | Task
 --- | ---
 Joe Callen | Implement Gmail module to check if the user has a new email, and update LED system appropriately depending on number of emails or importance of emails.
-Chris Cronin | Create a standard interface for services which will allow new services to be easily added to the system.
+Chris Cronin | Create a standard interface for services which will allow new services to be easily added to the system. Main module which calls the individual service functions.
 Andrew Gardner | Implement module to get weather data and update LED system appropriately for inclimate weather.
-Cole Padden | Implement a module to control LEDs based on input parameters of GPIO pin, blink duration, blink frequency, and LED color; and main module which calls the individual service functions.
+Cole Padden | Implement a module to control LEDs based on input parameters of GPIO pin, blink duration, blink frequency, and LED color. Main module which subscribes to the AMQP Server and call the led control module functions.
 
 
 Dependencies
