@@ -27,7 +27,6 @@ http://raspi.tv/2013/how-to-use-wiringpi2-for-python-on-the-raspberry-pi-in-rasp
 | WiringPi Pin | Name  | Header  | Name  | WiringPi Pin |
 |--------------|-------|---------|-------|--------------|
 
-
 |------------------------------------------------|
 | Priorities                                     |
 |-------------|---------|------------|-----------|
@@ -40,10 +39,9 @@ http://raspi.tv/2013/how-to-use-wiringpi2-for-python-on-the-raspberry-pi-in-rasp
 | 4           | on      | on         | off       |
 | 5           | on      | off        | off       |
 |-------------|---------|------------|-----------|
-
 """
 
-#import wiringpi2 as wiringpi
+import wiringpi2 as wiringpi
 from time import sleep
 
 class Notification:
@@ -104,6 +102,57 @@ class Notification:
                 group[0] = "unused"
                 break
 
+    def leds_on(self, name, priority):
+        """ turns on the LEDs for a service based on priority"""
+
+        # set wiring pi to use pins
+        wiringpi.wiringPiSetup()
+
+        # temporary list of pins from service
+        servicePins = []
+        for group in self.pinGroups:
+            if group[0] == str(name):
+                servicePins = group[1:4]
+        
+        # enable the pins for writing
+        wiringpi.pinMode(servicePins[0], 1)
+        wiringpi.digitalWrite(servicePins[0], 0)
+        wiringpi.pinMode(servicePins[1], 1)
+        wiringpi.digitalWrite(servicePins[1], 0)
+        wiringpi.pinMode(servicePins[2], 1)
+        wiringpi.digitalWrite(servicePins[2], 0)
+
+        # enable LEDs based on priority
+        if (int(priority) == 1) or (int(priority) == 2):
+            wiringpi.digitalWrite(servicePins[0], 1)
+
+        # index 1, yellow is enabled for priority levels 2, 3, and 4
+        if (int(priority) == 2) or (int(priority) == 3) or (int(priority) == 4):
+            wiringpi.digitalWrite(servicePins[1], 1)
+
+        # index 2, red is enabled for priority levels 4 and 5
+        if (int(priority) == 4) or (int(priority) == 5):
+            wiringpi.digitalWrite(servicePins[2], 1)
+
+    def leds_off(self, name):
+        """ turns off LEDs for a service based on a priority """
+
+        # set wiring pi to use pins
+        wiringpi.wiringPiSetup()
+
+        # temporary list of pins from service
+        servicePins = []
+        for group in self.pinGroups:
+            if group[0] == str(name):
+                servicePins = group[1:4]
+        
+        # enable the pins for writing
+        wiringpi.pinMode(servicePins[0], 1)
+        wiringpi.digitalWrite(servicePins[0], 0)
+        wiringpi.pinMode(servicePins[1], 1)
+        wiringpi.digitalWrite(servicePins[1], 0)
+        wiringpi.pinMode(servicePins[2], 1)
+        wiringpi.digitalWrite(servicePins[2], 0)
 
     def blink(self, name, priority ):
         """ Performs desired notification operation based on input

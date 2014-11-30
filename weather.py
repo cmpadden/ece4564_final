@@ -5,8 +5,6 @@ import urllib2
 import json
 
 
-
-
 class weather:
 	#Initialization
 	def __init__(self):
