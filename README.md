@@ -24,4 +24,6 @@ google-api-python-client | https://pypi.python.org/pypi/google-api-python-client
 gflags | apt-get python-gflags
 oauth2client | pip install oauth2client
 wiringpi2 | https://pypi.python.org/pypi/wiringpi2/1.0.10
+pika | https://pika.readthedocs.org/en/0.9.14/
+
 
