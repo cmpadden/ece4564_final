@@ -134,7 +134,7 @@ class Notification:
         if (int(priority) == 4) or (int(priority) == 5):
             wiringpi.digitalWrite(servicePins[2], 1)
 
-    def leds_off(self, name, priority):
+    def leds_off(self, name):
         """ turns off LEDs for a service based on a priority """
 
         # set wiring pi to use pins
