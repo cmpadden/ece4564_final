@@ -91,7 +91,16 @@ class Notification:
                 # break to prevent assigning service to multiple groups
                 break
 
-    def removeServer(self, name):
+    def checkServiceAdded(self, name):
+        """ checks to see if the service has been added """
+        for group in self.pinGroups:
+            if group[0] == str(name):
+                return True
+
+        # otherwise return 0
+        return False
+
+    def removeService(self, name):
         """ Removes the service and replaces it with an unused token
         """
 
