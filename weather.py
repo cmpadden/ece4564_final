@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+<<<<<<< HEAD
 
 import urllib
 import urllib2
