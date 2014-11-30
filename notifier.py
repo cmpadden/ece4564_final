@@ -26,7 +26,7 @@ def on_new_msg(channel, method, properties, msg_body):
             myNotification.addService(str(item))
 
         # turn on the LEDs for that service and priority
-        myNotification.leds_on(str(item), str(message[item])
+        myNotification.leds_on(str(item), str(message[item]))
 
         # if the priority is zero, turn off the LEDs, otherwise turn on based on priority
         print
