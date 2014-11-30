@@ -15,13 +15,16 @@ def on_new_msg(channel, method, properties, msg_body):
     # convert the message into a JSON object
     message = json.loads(msg_body)
 
-
-    # if the service isn't already assigned pins, assign pins
-    print myNotification.pinGroups
-
-
     # iterate over the dictionary
     for item in message:
+        
+        # check if the service has been added already
+        if myNotification.checkServiceAdded(str(item)):
+            print "service has already been added"
+
+        # otherwise add the service to the class
+        else:
+            myNotification.addService(str(item))
 
         # if the priority is zero, turn off the LEDs, otherwise turn on based on priority
         print "SERVICE NAME: " + str(item)
