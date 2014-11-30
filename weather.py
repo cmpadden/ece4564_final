@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+<<<<<<< HEAD
 
 import urllib
 import urllib2
@@ -7,7 +8,7 @@ import json
 
 
 
-class weather:
+class WeatherService:
 	#Initialization
 	def __init__(self):
 		#Get the user's zip code for the query
@@ -29,7 +30,7 @@ class weather:
 		return self.priority
 
 	#Updates the priority is 30 minutes have gone by
-	def update(self):
+	def doUpdate(self):
 		if(self.updateCount == self.updatePeriod):
 			#Creation of the query
 			query = 'http://api.wunderground.com/api/b60f147d6b774dea/hourly/q/' + str(self.zipCode) + '.json'

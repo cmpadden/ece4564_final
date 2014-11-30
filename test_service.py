@@ -10,9 +10,9 @@ class TestService:
 
 	def __init__(self):
 		self.name = "Test Service"	# Name of the service
-		self.priority = 0			# Holds a priority level as an int 0-5
+		self.priority = 6			# Holds a priority level as an int 0-5
 		self.updatePeriod = 1		# Update period in minutes, must be greater than zero
-		self.updateCount = 0
+		self.updateCount = 1
 
 		# Can read from a config file to get things like
 		# zipcode, OAuth token, update period, etc...
@@ -32,7 +32,8 @@ class TestService:
 	# getPriority() is the next function to get called.
 	def doUpdate(self):
 		if(self.updateCount == self.updatePeriod):
-			self.updateCount = 0
+			self.updateCount = 1
+			#print("update")
 			return True
 		else:
 			self.updateCount += 1
@@ -42,6 +43,8 @@ class TestService:
 	def getPriority(self):
 		# Call a function that queries the service for new data
 		# set the priority based on the data
-		print(str(self))
-
+		#print(str(self))
+		self.priority += 1;
+		if(self.priority > 5):
+			self.priority = 0
 		return self.priority
