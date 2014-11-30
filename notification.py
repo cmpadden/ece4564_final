@@ -57,7 +57,6 @@ class Notification:
                          ["unused", 6, 10, 11]
 
         # initialize all pins to 0V
-        '''
         wiringpi.wiringPiSetup()
         wiringpi.digitalWrite(8, 0)
         wiringpi.digitalWrite(9, 0)
@@ -74,7 +73,6 @@ class Notification:
         wiringpi.digitalWrite(6, 0)
         wiringpi.digitalWrite(10, 0)
         wiringpi.digitalWrite(11, 0)
-        ''' 
 
 
     def addService(self, name):
