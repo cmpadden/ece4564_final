@@ -48,3 +48,6 @@ class TestService:
 		if(self.priority > 5):
 			self.priority = 0
 		return self.priority
+
+	def doCleanUp(self):
+		pass

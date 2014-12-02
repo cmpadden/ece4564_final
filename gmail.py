@@ -140,6 +140,9 @@ class GmailService:
         else:
             self.priority = 0
 
+    def doCleanUp(self):
+        os.remove('gmail.storage')
+
 
 class GmailException(Exception):
     pass
