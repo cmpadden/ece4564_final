@@ -17,6 +17,12 @@ from oauth2client.tools import run
 
 
 class GmailService:
+    """
+    Gmail Service Class
+    Used to poll a users gmail account every 5 minutes to determine if there are unread messages
+    from within the past day.  It then takes that data, and updates a priority.
+    """
+
     def __init__(self):
         self.name = 'Gmail Service'
         self.priority = 0
@@ -129,7 +135,7 @@ class GmailService:
             4 - 51-75 messages
             5 - 76+ messages
 
-        :arg count:  the number of unread messages
+        :param count:  the number of unread messages
         :return: None
         :updates:  self.priority
         """
@@ -147,11 +153,19 @@ class GmailService:
             self.priority = 0
 
     def doCleanUp(self):
+        """
+        Removes the gmail.storage flow in order to protect the users data
+        Called when raising a GmailException, and can be called by the main method
+        """
         if os.path.isfile('gmail.storage'):
             os.remove('gmail.storage')
 
 
 class GmailException(Exception):
+    """
+    Used whenever the class throws an exception that is not correctable within the class.
+    This should be handled by the main method to handle the error should it occur
+    """
     pass
 
 
