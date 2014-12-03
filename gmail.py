@@ -90,6 +90,7 @@ class GmailService:
             if credentials is None or credentials.invalid:
                 credentials = run(self.flow, self.STORAGE, http=http)
         except:
+            self.doCleanUp()
             raise GmailException('Error:  Authentication request was rejected')
 
         # Authorize httplib2.Http object with credentials
@@ -99,8 +100,13 @@ class GmailService:
         gmail_service = build('gmail', 'v1', http=http)
 
         # Retrieve all new unread messages within the past day
-        messages = gmail_service.users().messages().list(userId='me',
-                                                         q='is:unread AND newer_than:7d').execute()
+        try:
+            messages = gmail_service.users().messages().list(
+                userId='me',
+                q='is:unread AND newer_than:7d').execute()
+        except:
+            self.doCleanUp()
+            raise GmailException('Error: Something went wrong while making the gmail request')
 
         try:
             if messages['messages']:
@@ -141,7 +147,8 @@ class GmailService:
             self.priority = 0
 
     def doCleanUp(self):
-        os.remove('gmail.storage')
+        if os.path.isfile('gmail.storage'):
+            os.remove('gmail.storage')
 
 
 class GmailException(Exception):
