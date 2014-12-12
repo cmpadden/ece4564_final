@@ -118,5 +118,5 @@ class WeatherService:
 			return False
 		
 #For testing the class
-theWeather = WeatherService()
-theWeather.doUpdate()
+#theWeather = WeatherService()
+#theWeather.doUpdate()
