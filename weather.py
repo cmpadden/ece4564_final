@@ -3,6 +3,7 @@
 import urllib
 import urllib2
 import json
+import re
 
 
 
@@ -11,7 +12,14 @@ class WeatherService:
 	#Initialization
 	def __init__(self):
 		#Get the user's zip code for the query
-		self.zipCode = int(raw_input('Enter your zip code: '))
+		properZipCode = 0;
+		while(not properZipCode):
+			temp = raw_input('Enter your zip code: ')
+			if re.match('^\d{5}$', temp) is None:
+				print "Invalid zipcode"
+			else:
+				self.zipCode = int(temp)
+				properZipCode = 1
 		#Name of the service
 		self.name = "Weather"
 		self.priority = 0;
@@ -110,5 +118,5 @@ class WeatherService:
 			return False
 		
 #For testing the class
-#theWeather = weather()
-#theWeather.update()
+theWeather = WeatherService()
+theWeather.doUpdate()
