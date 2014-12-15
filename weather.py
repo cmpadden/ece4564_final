@@ -42,12 +42,18 @@ class WeatherService:
 		if(self.updateCount == self.updatePeriod):
 			#Creation of the query
 			query = 'http://api.wunderground.com/api/b60f147d6b774dea/hourly/q/' + str(self.zipCode) + '.json'
+			currentQuery = 'http://api.wunderground.com/api/b60f147d6b774dea/conditions/q/' + str(self.zipCode) + '.json'
 			#Gets the data in JSON formate from weather underground
 			try:
 				weather_data = urllib2.urlopen(query)
+				current_data = urllib2.urlopen(query)
 			except NameError:
 				print "Error with querying weather underground"
 			jsonData = weather_data.read()
+			currentJson = current_data.read()
+			getCurrTemp = json.loads(currentJson)
+			currTemp = float(getCurrTemp["hourly_forecast"][0]["temp"]["english"])
+
 			searchable = json.loads(jsonData)
 			#Gets the forecast for the next three hours
 			firstHour = searchable["hourly_forecast"][0]
@@ -56,26 +62,26 @@ class WeatherService:
 			#Flag to check if the priority has been set
 			setFlag = 0
 			#Sets the priority depending on the temperature
-			if(float(firstHour["temp"]["english"]) < 60 or float(secondHour["temp"]["english"]) < 60 or float(thirdHour["temp"]["english"]) < 60):
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 5 or abs(currTemp - float(secondHour["temp"]["english"])) > 5 or abs(currTemp - float(thirdHour["temp"]["english"])) > 5):
 				self.priority = 1
 				setFlag = 1
-				self.theComment = "Moderate temperature"
-			if(float(firstHour["temp"]["english"]) < 40 or float(secondHour["temp"]["english"]) < 40 or float(thirdHour["temp"]["english"]) < 40):
+				self.theComment = "Slight temperature change"
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 10 or abs(currTemp - float(secondHour["temp"]["english"])) > 10 or abs(currTemp - float(thirdHour["temp"]["english"])) > 10):
 				self.priority = 2
 				setFlag = 1
-				self.theComment = "Moderate temperature"
-			if(float(firstHour["temp"]["english"]) < 30 or float(secondHour["temp"]["english"]) < 30 or float(thirdHour["temp"]["english"]) < 30):
+				self.theComment = "Small temperature change"
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 15 or abs(currTemp - float(secondHour["temp"]["english"])) > 15 or abs(currTemp - float(thirdHour["temp"]["english"])) > 15):
 				self.priority = 3
 				setFlag = 1
-				self.theComment = "Cold temperature"
-			if(float(firstHour["temp"]["english"]) < 20 or float(secondHour["temp"]["english"]) < 20 or float(thirdHour["temp"]["english"]) < 20):
+				self.theComment = "Moderate temperature change"
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 20 or abs(currTemp - float(secondHour["temp"]["english"])) > 20 or abs(currTemp - float(thirdHour["temp"]["english"])) > 20):
 				self.priority = 4
 				setFlag = 1
-				self.theComment = "Cold temperature"
-			if(float(firstHour["temp"]["english"]) < 10 or float(secondHour["temp"]["english"]) < 10 or float(thirdHour["temp"]["english"]) < 10):
+				self.theComment = "Large temperature change"
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 25 or abs(currTemp - float(secondHour["temp"]["english"])) > 25 or abs(currTemp - float(thirdHour["temp"]["english"])) > 25):
 				self.priority = 5
 				setFlag = 1
-				self.theComment = "Cold temperature"
+				self.theComment = "Major temperature change"
 			#Sets the priority depending on the rainfall if it is of greater priority than the temperature priority
 			#or if a priority was not set for the temperature
 			if(float(firstHour["qpf"]["english"]) > 0 or float(secondHour["qpf"]["english"]) > 0 or float(thirdHour["qpf"]["english"]) > 0):
@@ -136,7 +142,6 @@ class WeatherService:
 			return False
 
 	def comment(self):
-		print self.theComment
 		return self.theComment
 		
 #For testing the class
