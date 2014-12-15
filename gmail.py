@@ -77,7 +77,7 @@ class GmailService:
         """
         # Get new message count and update priority
         self.getMessageCount()
-        print(str(self))
+        #print(str(self))
         return self.priority
 
     def getMessageCount(self):
@@ -147,7 +147,7 @@ class GmailService:
             self.priority = 3
         elif 5 < count <= 20:
             self.priority = 2
-        elif 1 < count <= 5:
+        elif 1 <= count <= 5:
             self.priority = 1
         else:
             self.priority = 0
