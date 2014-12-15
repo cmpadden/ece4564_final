@@ -45,7 +45,7 @@ messageBroker = pika.BlockingConnection(
     pika.ConnectionParameters(host="netapps.ece.vt.edu",
                               virtual_host="/2014/fall/colossus",
                               credentials=pika.PlainCredentials("colossus",
-                                                                "Thermal?Lanc3822!",
+                                                                "Thermal?Lanc3822",
                                                                 True)))
 
 ##################################
