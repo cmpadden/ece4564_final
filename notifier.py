@@ -43,9 +43,9 @@ print "Notifer: Connected to message broker"
 
 messageBroker = pika.BlockingConnection(
     pika.ConnectionParameters(host="netapps.ece.vt.edu",
-                              virtual_host="sandbox",
-                              credentials=pika.PlainCredentials("ECE4564-Fall2014",
-                                                                "13ac0N!",
+                              virtual_host="/2014/fall/colossus",
+                              credentials=pika.PlainCredentials("colossus",
+                                                                "Thermal?Lanc3822!",
                                                                 True)))
 
 ##################################
