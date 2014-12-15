@@ -140,6 +140,6 @@ class WeatherService:
 		return self.theComment
 		
 #For testing the class
-theWeather = WeatherService()
-theWeather.doUpdate()
-theWeather.comment()
+#theWeather = WeatherService()
+#theWeather.doUpdate()
+#theWeather.comment()

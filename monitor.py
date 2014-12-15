@@ -12,20 +12,20 @@ from weather import WeatherService
 
 logging.getLogger('pika').setLevel(logging.ERROR)
 
-# Instantiate the services
-s1 = TestService()
-s2 = GmailService()
-#s3 = WeatherService()
-services = [s1, s2];
-
 # Parse command line arguments
 parser = argparse.ArgumentParser(description='Stat Cleint')
 parser.add_argument('-b', metavar='broker-address', dest='ip', required=True)
 parser.add_argument('-p', metavar='virtual-host', dest='virtualhost', default='/')
-parser.add_argument('-c', metavar='username:password', dest='credentials', default='guest:guest')
+parser.add_argument('-c', metavar='username:password', dest='credentials', required=True)
 cla = parser.parse_args()
 
 try:
+	# Instantiate the services
+	s1 = TestService()
+	s2 = GmailService()
+	#s3 = WeatherService()
+	services = [s1, s2];
+
 	#connect to message broker
 	credentials = cla.credentials.split(':')
 	msg_broker = pika.BlockingConnection(
@@ -43,7 +43,7 @@ try:
 		data = {}
 		for service in services:
 			
-			if service.doUpdate():								# If the service should be updated
+			if service.doUpdate():									# If the service should be updated
 				try:
 					data[service.getName()] = service.getPriority()	# Add the name and priority to the dict
 					dataString = json.dumps(data)					# Dump the data to json
@@ -51,21 +51,22 @@ try:
 						service.comment()
 				except:
 					print("Unable to update " + service.getName() + ", skipping...")
-		if data:												# If there is updated info to send
+		if data:													# If there is updated info to send
 			channel.basic_publish(exchange="services", routing_key='monitor', body=dataString)	# Send updated info
 			print(data)
 		
-		time.sleep(1)	# Sleep of 1 minute
+		time.sleep(1)	# Sleep of 1 second (for demo), normaly 60 seconds
 
 except KeyboardInterrupt:
-	for service in services:
-		if hasattr(service, 'doCleanup'):
-			service.doCleanup()
+	pass
 
 except Exception, ee:
 	print("Error: {0}".format(ee))
 
 finally:
 	# close the connection
-	msg_broker.close()	
+	msg_broker.close()
+	for service in services:
+		if hasattr(service, 'doCleanup'):
+			service.doCleanup()
 
