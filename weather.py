@@ -61,24 +61,25 @@ class WeatherService:
 			thirdHour = searchable["hourly_forecast"][2]
 			#Flag to check if the priority has been set
 			setFlag = 0
+
 			#Sets the priority depending on the temperature
-			if(abs(currTemp - float(firstHour["temp"]["english"])) > 5 or abs(currTemp - float(secondHour["temp"]["english"])) > 5 or abs(currTemp - float(thirdHour["temp"]["english"])) > 5):
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 3 or abs(currTemp - float(secondHour["temp"]["english"])) > 3 or abs(currTemp - float(thirdHour["temp"]["english"])) > 3):
 				self.priority = 1
 				setFlag = 1
 				self.theComment = "Slight temperature change"
-			if(abs(currTemp - float(firstHour["temp"]["english"])) > 10 or abs(currTemp - float(secondHour["temp"]["english"])) > 10 or abs(currTemp - float(thirdHour["temp"]["english"])) > 10):
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 6 or abs(currTemp - float(secondHour["temp"]["english"])) > 6 or abs(currTemp - float(thirdHour["temp"]["english"])) > 6):
 				self.priority = 2
 				setFlag = 1
 				self.theComment = "Small temperature change"
-			if(abs(currTemp - float(firstHour["temp"]["english"])) > 15 or abs(currTemp - float(secondHour["temp"]["english"])) > 15 or abs(currTemp - float(thirdHour["temp"]["english"])) > 15):
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 9 or abs(currTemp - float(secondHour["temp"]["english"])) > 9 or abs(currTemp - float(thirdHour["temp"]["english"])) > 9):
 				self.priority = 3
 				setFlag = 1
 				self.theComment = "Moderate temperature change"
-			if(abs(currTemp - float(firstHour["temp"]["english"])) > 20 or abs(currTemp - float(secondHour["temp"]["english"])) > 20 or abs(currTemp - float(thirdHour["temp"]["english"])) > 20):
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 12 or abs(currTemp - float(secondHour["temp"]["english"])) > 12 or abs(currTemp - float(thirdHour["temp"]["english"])) > 12):
 				self.priority = 4
 				setFlag = 1
 				self.theComment = "Large temperature change"
-			if(abs(currTemp - float(firstHour["temp"]["english"])) > 25 or abs(currTemp - float(secondHour["temp"]["english"])) > 25 or abs(currTemp - float(thirdHour["temp"]["english"])) > 25):
+			if(abs(currTemp - float(firstHour["temp"]["english"])) > 15 or abs(currTemp - float(secondHour["temp"]["english"])) > 15 or abs(currTemp - float(thirdHour["temp"]["english"])) > 15):
 				self.priority = 5
 				setFlag = 1
 				self.theComment = "Major temperature change"
@@ -133,6 +134,7 @@ class WeatherService:
 					self.theComment = "Heavy rain"
 			#If no update occurs then set the priority to 0
 			if(setFlag == 0):
+				self.theComment = "No weather update"
 				self.priority = 0
 			self.updateCount = 0
 			return True
@@ -147,4 +149,5 @@ class WeatherService:
 #For testing the class
 #theWeather = WeatherService()
 #theWeather.doUpdate()
+#theWeather.getPriority()
 #theWeather.comment()
