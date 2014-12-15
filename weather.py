@@ -22,11 +22,12 @@ class WeatherService:
 				properZipCode = 1
 		#Name of the service
 		self.name = "Weather"
-		self.priority = 0;
+		self.priority = 0
 		#To be updated every 30 mins
-		self.updatePeriod = 30;
+		self.updatePeriod = 30
 		#Keeps track of time since last update, set to 30 initially so an update will occur on the first run
-		self.updateCount = 30;
+		self.updateCount = 30
+		self.theComment = ""
 	
 	#Returns the name of the service
 	def getName(self):
@@ -42,7 +43,10 @@ class WeatherService:
 			#Creation of the query
 			query = 'http://api.wunderground.com/api/b60f147d6b774dea/hourly/q/' + str(self.zipCode) + '.json'
 			#Gets the data in JSON formate from weather underground
-			weather_data = urllib2.urlopen(query)
+			try:
+				weather_data = urllib2.urlopen(query)
+			except NameError:
+				print "Error with querying weather underground"
 			jsonData = weather_data.read()
 			searchable = json.loads(jsonData)
 			#Gets the forecast for the next three hours
@@ -55,58 +59,72 @@ class WeatherService:
 			if(float(firstHour["temp"]["english"]) < 60 or float(secondHour["temp"]["english"]) < 60 or float(thirdHour["temp"]["english"]) < 60):
 				self.priority = 1
 				setFlag = 1
+				self.theComment = "Moderate temperature"
 			if(float(firstHour["temp"]["english"]) < 40 or float(secondHour["temp"]["english"]) < 40 or float(thirdHour["temp"]["english"]) < 40):
 				self.priority = 2
 				setFlag = 1
+				self.theComment = "Moderate temperature"
 			if(float(firstHour["temp"]["english"]) < 30 or float(secondHour["temp"]["english"]) < 30 or float(thirdHour["temp"]["english"]) < 30):
 				self.priority = 3
 				setFlag = 1
+				self.theComment = "Cold temperature"
 			if(float(firstHour["temp"]["english"]) < 20 or float(secondHour["temp"]["english"]) < 20 or float(thirdHour["temp"]["english"]) < 20):
 				self.priority = 4
 				setFlag = 1
+				self.theComment = "Cold temperature"
 			if(float(firstHour["temp"]["english"]) < 10 or float(secondHour["temp"]["english"]) < 10 or float(thirdHour["temp"]["english"]) < 10):
 				self.priority = 5
 				setFlag = 1
+				self.theComment = "Cold temperature"
 			#Sets the priority depending on the rainfall if it is of greater priority than the temperature priority
 			#or if a priority was not set for the temperature
 			if(float(firstHour["qpf"]["english"]) > 0 or float(secondHour["qpf"]["english"]) > 0 or float(thirdHour["qpf"]["english"]) > 0):
 				if(setFlag == 0 or self.priority < 1):
 					self.priority = 1
 					setFlag = 1
+					self.theComment = "Light rain"
 			if(float(firstHour["qpf"]["english"]) > 1 or float(secondHour["qpf"]["english"]) > 1 or float(thirdHour["qpf"]["english"]) > 1):
 				if(setFlag == 0 or self.priority < 2):
 					self.priority = 2
 					setFlag = 1
+					self.theComment = "Light rain"
 			if(float(firstHour["qpf"]["english"]) > 2 or float(secondHour["qpf"]["english"]) > 2 or float(thirdHour["qpf"]["english"]) > 2):
 				if(setFlag == 0 or self.priority < 3):
 					self.priority = 3
 					setFlag = 1
+					self.theComment = "Moderate rain"
 			if(float(firstHour["qpf"]["english"]) > 3 or float(secondHour["qpf"]["english"]) > 3 or float(thirdHour["qpf"]["english"]) > 3):
 				if(setFlag == 0 or self.priority < 4):
 					self.priority = 4
 					setFlag = 1
+					self.theComment = "Moderate rain"
 			if(float(firstHour["qpf"]["english"]) > 4 or float(secondHour["qpf"]["english"]) > 4 or float(thirdHour["qpf"]["english"]) > 4):
 				if(setFlag == 0 or self.priority < 5):
 					self.priority = 5
 					setFlag = 1
+					self.theComment = "Heavy rain"
 			#Sets the priority depending on the snow fall if it is of greater priority than the temperature or rain fall priority
 			#or if a priority was not set for the temperature or rain fall
 			if(float(firstHour["snow"]["english"]) > 0 or float(secondHour["snow"]["english"]) > 0 or float(thirdHour["snow"]["english"]) > 0):
 				if(setFlag == 0 or self.priority < 2):
 					self.priority = 2
 					setFlag = 1
+					self.theComment = "Light snow"
 			if(float(firstHour["snow"]["english"]) > 1 or float(secondHour["snow"]["english"]) > 1 or float(thirdHour["snow"]["english"]) > 1):
 				if(setFlag == 0 or self.priority < 3):
 					self.priority = 3
 					setFlag = 1
+					self.theComment = "Moderate rain"
 			if(float(firstHour["snow"]["english"]) > 2 or float(secondHour["snow"]["english"]) > 2 or float(thirdHour["snow"]["english"]) > 2):
 				if(setFlag == 0 or self.priority < 4):
 					self.priority = 4
 					setFlag = 1
+					self.theComment = "Moderate rain"
 			if(float(firstHour["snow"]["english"]) > 3 or float(secondHour["snow"]["english"]) > 3 or float(thirdHour["snow"]["english"]) > 3):
 				if(setFlag == 0 or self.priority < 5):
 					self.priority = 5
 					setFlag = 1
+					self.theComment = "Heavy rain"
 			#If no update occurs then set the priority to 0
 			if(setFlag == 0):
 				self.priority = 0
@@ -116,7 +134,12 @@ class WeatherService:
 		else:
 			self.updateCount += 1
 			return False
+
+	def comment(self):
+		print self.theComment
+		return self.theComment
 		
 #For testing the class
-#theWeather = WeatherService()
-#theWeather.doUpdate()
+theWeather = WeatherService()
+theWeather.doUpdate()
+theWeather.comment()
